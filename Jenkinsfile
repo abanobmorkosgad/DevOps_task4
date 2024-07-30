@@ -56,11 +56,10 @@ spec:
                     withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
                         script {
                             sh '''
-                            # Install AWS CLI
-                            apk add --no-cache python3 py3-pip
-                            pip3 install awscli
+                            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                            unzip awscliv2.zip
+                            ./aws/install
 
-                            # Deploy to Kubernetes
                             kubectl apply -f k8s_app
                             '''
                         }
