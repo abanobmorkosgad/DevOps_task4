@@ -41,7 +41,7 @@ spec:
     stage('Deploying App to Kubernetes') {
       steps {
         script {
-          kubernetesDeploy(configs: "k8s_app/app.yml", kubeconfigId: "kubernetes")
+          kubernetesDeploy(configs: "k8s_app/app.yaml", kubeconfigId: "kubernetes")
         }
       }
     }
