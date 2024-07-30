@@ -36,6 +36,7 @@ spec:
         echo 'Deploying to eks cluster ...'
         withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
           script {
+            sh 'apk add --no-cache curl'
             sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
             sh 'chmod +x kubectl'
             sh 'mv kubectl /usr/local/bin/'
