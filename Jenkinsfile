@@ -12,9 +12,9 @@ spec:
   serviceAccountName: jenkins-admin
   containers:
   - name: kubectl
-    image: bearengineer/awscli-kubectl
+    image: abanobmorkos10/aws-kubectl
     command:
-      - "/bin/sh"
+      - "/bin/bash"
       - "-c"
       - "sleep 99d"
     tty: true
