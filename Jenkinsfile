@@ -14,8 +14,12 @@ spec:
   - name: kubectl
     image: bitnami/kubectl:latest
     command:
-    - cat
+      - "/bin/sh"
+      - "-c"
+      - "sleep 99d"
     tty: true
+    securityContext:
+      runAsUser: 0
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
