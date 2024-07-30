@@ -15,13 +15,7 @@ spec:
     command:
     - /busybox/cat
     tty: true
-    volumeMounts:
-      - name: docker-config
-        mountPath: /kaniko/.docker
-  volumes:
-    - name: docker-config
-      configMap:
-        name: docker-config
+
 """
     }
   }
