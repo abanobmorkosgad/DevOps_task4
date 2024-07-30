@@ -36,16 +36,12 @@ spec:
         echo 'Deploying to eks cluster ...'
         withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
           script {
-            sh """
-              # Install kubectl
-              curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-              chmod +x kubectl
-              mv kubectl /usr/local/bin/
-              
-              # Apply Kubernetes manifests
-              kubectl apply -f k8s_app/spp.yaml
-              kubectl apply -f k8s_app/service.yaml
-            """
+            sh 'curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"'
+            sh 'chmod +x kubectl'
+            sh 'mv kubectl /usr/local/bin/'
+
+            sh 'kubectl apply -f k8s_app/app.yaml'
+            sh 'kubectl apply -f k8s_app/service.yaml'
           }
         }
       }
