@@ -55,7 +55,14 @@ spec:
                 container('kubectl') {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
                         script {
-                            sh 'kubectl apply -f k8s_app'
+                            sh '''
+                            # Install AWS CLI
+                            apk add --no-cache python3 py3-pip
+                            pip3 install awscli
+
+                            # Deploy to Kubernetes
+                            kubectl apply -f k8s_app
+                            '''
                         }
                     }
                 }
