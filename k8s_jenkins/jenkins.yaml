@@ -30,13 +30,25 @@ spec:
       labels:
         app: jenkins
     spec:
-      initContainers:
-      - name: init-permissions
-        image: busybox
-        command: ['sh', '-c', 'chown -R 1000:1000 /var/jenkins_home']
-        volumeMounts:
-        - mountPath: /var/jenkins_home
-          name: jenkins-data
+      # initContainers:
+      # - name: init-permissions
+      #   image: busybox
+      #   command: ['sh', '-c', 'chown -R 1000:1000 /var/jenkins_home']
+      #   volumeMounts:
+      #   - mountPath: /var/jenkins_home
+      #     name: jenkins-data
+      # - name: add-jenkins-to-docker
+      #   image: busybox
+      #   command: ['sh', '-c', 'chmod 666 /var/run/docker.sock']
+        # securityContext:
+        #   runAsUser: 0
+        # volumeMounts:
+        # - mountPath: /var/run/docker.sock
+        #   name: docker-socket
+      securityContext:
+            fsGroup: 1000
+            runAsUser: 1000
+      serviceAccountName: jenkins-admin
       containers:
       - name: jenkins
         image: jenkins/jenkins:lts
@@ -46,17 +58,17 @@ spec:
         volumeMounts:
         - mountPath: /var/jenkins_home
           name: jenkins-data
-        - mountPath: /var/run/docker.sock
-          name: docker-socket
-        - mountPath: /usr/bin/docker
-          name: docker-bin
+        # - mountPath: /var/run/docker.sock
+        #   name: docker-socket
+        # - mountPath: /usr/bin/docker
+        #   name: docker-bin
       volumes:
       - name: jenkins-data
         persistentVolumeClaim:
           claimName: jenkins-claim
-      - name: docker-socket
-        hostPath:
-          path: /var/run/docker.sock
-      - name: docker-bin
-        hostPath:
-          path: /usr/bin/docker
+      # - name: docker-socket
+      #   hostPath:
+      #     path: /var/run/docker.sock
+      # - name: docker-bin
+      #   hostPath:
+      #     path: /usr/bin/docker

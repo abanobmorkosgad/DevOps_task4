@@ -1,51 +1,42 @@
 pipeline {
-
-  environment {
-    dockerimagename = "abanobmorkos10/pwc_app"
-    dockerImage = ""
+  agent {
+    kubernetes {
+      yaml '''
+        apiVersion: v1
+        kind: Pod
+        spec:
+          containers:
+          - name: docker
+            image: docker:latest
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+             - mountPath: /var/run/docker.sock
+               name: docker-sock
+          volumes:
+          - name: docker-sock
+            hostPath:
+              path: /var/run/docker.sock    
+        '''
+    }
   }
-
-  agent any
-
   stages {
-
-    // stage('Checkout Source') {
+    // stage('Clone') {
     //   steps {
-    //     git 'https://github.com/abanobmorkosgad/DevOps_task4.git'
-    //   }
-    // }
-
-    stage('Build image') {
-      steps{
-        dir('app') {
-          script {
-            dockerImage = docker.build dockerimagename
-          }
-        }
-      }
-    }
-
-    stage('Pushing Image') {
-      environment {
-               registryCredential = 'dockerCred'
-           }
-      steps{
-        script {
-          docker.withRegistry( 'https://registry.hub.docker.com', registryCredential ) {
-            dockerImage.push("latest")
-          }
-        }
-      }
-    }
-
-    // stage('Deploying App to Kubernetes') {
-    //   steps {
-    //     script {
-    //       kubernetesDeploy(configs: "deploymentservice.yml", kubeconfigId: "kubernetes")
+    //     container('docker') {
+    //       git branch: 'main', changelog: false, poll: false, url: 'https://mohdsabir-cloudside@bitbucket.org/mohdsabir-cloudside/java-app.git'
     //     }
     //   }
-    // }
-
+    // }  
+    stage('Build-Docker-Image') {
+      steps {
+        dir('app'){
+            container('docker') {
+            sh 'docker build -t abanobmorkos10/app_pwc:latest .'
+          }
+        }
+      }
+    }
   }
-
 }
