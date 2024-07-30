@@ -37,7 +37,7 @@ spec:
       steps {
         dir('app'){
             // container('docker') {
-            sh 'docker build -t abanobmorkos10/app_pwc:latest .'
+            sh "/kaniko/executor --dockerfile app/Dockerfile --context `app`"
         //   }
         }
       }
