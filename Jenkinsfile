@@ -41,7 +41,7 @@ spec:
             steps {
                 container('kaniko') {
                     script {
-                        sh '/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest'
+                        sh '/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:${BUILD_NUMBER}'
                     }
                 }
             }
@@ -55,6 +55,7 @@ spec:
                 container('kubectl') {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
                         script {
+                            sh 'sed -i \"s|image:.*|image: abanobmorkos10/pwc_app:${BUILD_NUMBER}|g\" k8s_app/app.yaml'
                             sh 'kubectl apply -f k8s_app'
                         }
                     }
