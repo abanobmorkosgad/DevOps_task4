@@ -10,7 +10,7 @@ metadata:
 spec:
   containers:
   - name: jnlp
-      image: jenkins/inbound-agent:latest
+    image: jenkins/inbound-agent:latest
     command:
     - /busybox/cat
     tty: true
