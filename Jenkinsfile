@@ -1,9 +1,9 @@
 pipeline {
     agent {
-    kubernetes {
-      label 'jenkinsrun'
-      defaultContainer 'builder'
-      yaml """
+        kubernetes {
+            label 'jenkinsrun'
+            defaultContainer 'builder'
+            yaml """
 kind: Pod
 metadata:
   name: kaniko
@@ -11,41 +11,47 @@ metadata:
 spec:
   serviceAccountName: jenkins-admin
   containers:
-  - name: builder
+  - name: kubectl
+    image: bitnami/kubectl:latest
+    command:
+    - cat
+    tty: true
+  - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
     command:
-    - /busybox/cat
+    - cat
     tty: true
     volumeMounts:
-        - name: docker-config
-          mountPath: /kaniko/.docker/
+      - name: docker-config
+        mountPath: /kaniko/.docker/
   volumes:
     - name: docker-config
       secret:
         secretName: docker-config
 """
-    }
-  }
-  stages {
-    // stage('Clone') {
-    //   steps {
-    //     container('docker') {
-    //       git branch: 'main', changelog: false, poll: false, url: 'https://mohdsabir-cloudside@bitbucket.org/mohdsabir-cloudside/java-app.git'
-    //     }
-    //   }
-    // }  
-    stage('Build-Docker-Image') {
-      steps {
-        sh "/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest"
-      }
-    }
-    stage('Deploying-App-to-Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "k8s_app/app.yaml",kubeconfigId: "kubernetes")
         }
-      }
     }
-  }
+    stages {
+        stage('Build-Docker-Image') {
+            steps {
+                container('kaniko') {
+                    script {
+                        sh '/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest'
+                    }
+                }
+            }
+        }
+        stage('deploy to eks') {
+            steps {
+                container('kubectl') {
+                    withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
+                        script {
+                            sh 'kubectl apply -f k8s_app'
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
