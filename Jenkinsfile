@@ -29,11 +29,7 @@ spec:
     // }  
     stage('Build-Docker-Image') {
       steps {
-        dir('app'){
-            // container('docker') {
-            sh "/kaniko/executor --dockerfile app/Dockerfile --context app --no-push"
-        //   }
-        }
+        sh "/kaniko/executor --dockerfile app/Dockerfile --context app --no-push"
       }
     }
   }
