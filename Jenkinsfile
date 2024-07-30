@@ -15,7 +15,13 @@ spec:
     command:
     - /busybox/cat
     tty: true
-
+    volumeMounts:
+        - name: docker-config
+          mountPath: /kaniko/.docker/
+  volumes:
+    - name: docker-config
+      secret:
+        secretName: docker-config
 """
     }
   }
@@ -29,7 +35,7 @@ spec:
     // }  
     stage('Build-Docker-Image') {
       steps {
-        sh "/kaniko/executor --dockerfile app/Dockerfile --context app --no-push"
+        sh "/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest"
       }
     }
   }
