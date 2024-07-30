@@ -31,7 +31,7 @@ spec:
       steps {
         dir('app'){
             // container('docker') {
-            sh "/kaniko/executor --dockerfile app/Dockerfile --context `app`"
+            sh "/kaniko/executor --dockerfile app/Dockerfile --context app"
         //   }
         }
       }
