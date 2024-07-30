@@ -8,6 +8,7 @@ kind: Pod
 metadata:
   name: kaniko
 spec:
+  serviceAccountName: jenkins-admin
   containers:
   - name: builder
     image: gcr.io/kaniko-project/executor:debug
