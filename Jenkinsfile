@@ -9,16 +9,18 @@ pipeline {
 
   stages {
 
-    stage('Checkout Source') {
-      steps {
-        git 'https://github.com/abanobmorkosgad/DevOps_task4.git'
-      }
-    }
+    // stage('Checkout Source') {
+    //   steps {
+    //     git 'https://github.com/abanobmorkosgad/DevOps_task4.git'
+    //   }
+    // }
 
     stage('Build image') {
       steps{
-        script {
-          dockerImage = docker.build dockerimagename
+        dir('app') {
+          script {
+            dockerImage = docker.build dockerimagename
+          }
         }
       }
     }
