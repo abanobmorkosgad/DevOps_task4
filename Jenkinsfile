@@ -1,21 +1,26 @@
 pipeline {
     agent {
         kubernetes {
-            yaml '''
-        apiVersion: v1
-        kind: Pod
-        spec:
-          containers:
-          - name: docker
-            image: abanobmorkos10/docker
-            command:
-            - cat
-            tty: true
-            securityContext:
-              privileged: true
-       '''
+            label 'jenkinsrun'
+            defaultContainer 'dind'
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: dind
+    image: docker:18.05-dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+      - name: dind-storage
+        mountPath: /var/lib/docker
+  volumes:
+    - name: dind-storage
+      emptyDir: {}
+"""
         }
-    }
+      }
   stages {
     // stage('Clone') {
     //   steps {
@@ -28,8 +33,6 @@ pipeline {
       steps {
         dir('app'){
             // container('docker') {
-            sh 'dockerd & > /dev/null'
-            sleep(time: 10, unit: "SECONDS")
             sh 'docker build -t abanobmorkos10/app_pwc:latest .'
         //   }
         }
