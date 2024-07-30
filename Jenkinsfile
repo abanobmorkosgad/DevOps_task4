@@ -28,6 +28,8 @@ pipeline {
       steps {
         dir('app'){
             // container('docker') {
+            sh 'dockerd & > /dev/null'
+            sleep(time: 10, unit: "SECONDS")
             sh 'docker build -t abanobmorkos10/app_pwc:latest .'
         //   }
         }
