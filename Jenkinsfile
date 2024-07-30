@@ -1,26 +1,30 @@
 pipeline {
     agent {
-        kubernetes {
-            label 'jenkinsrun'
-            defaultContainer 'dind'
-            yaml """
-apiVersion: v1
+    kubernetes {
+      label 'jenkinsrun'
+      defaultContainer 'builder'
+      yaml """
 kind: Pod
+metadata:
+  name: kaniko
 spec:
   containers:
-  - name: dind
-    image: docker:18.05-dind
-    securityContext:
-      privileged: true
+  - name: builder
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    command:
+    - /busybox/cat
+    tty: true
     volumeMounts:
-      - name: dind-storage
-        mountPath: /var/lib/docker
+      - name: docker-config
+        mountPath: /kaniko/.docker
   volumes:
-    - name: dind-storage
-      emptyDir: {}
+    - name: docker-config
+      configMap:
+        name: docker-config
 """
-        }
-      }
+    }
+  }
   stages {
     // stage('Clone') {
     //   steps {
