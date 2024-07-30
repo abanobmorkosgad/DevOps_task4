@@ -38,5 +38,12 @@ spec:
         sh "/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest"
       }
     }
+    stage('Deploying App to Kubernetes') {
+      steps {
+        script {
+          kubernetesDeploy(configs: "k8s_app/app.yml", kubeconfigId: "kubernetes")
+        }
+      }
+    }
   }
 }
