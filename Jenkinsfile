@@ -7,6 +7,7 @@ pipeline {
 kind: Pod
 metadata:
   name: kaniko
+  namespace: jenkins
 spec:
   serviceAccountName: jenkins-admin
   containers:
