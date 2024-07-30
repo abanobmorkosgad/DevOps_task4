@@ -11,9 +11,6 @@ spec:
   containers:
   - name: jnlp
     image: jenkins/inbound-agent:latest
-    command:
-    - /busybox/cat
-    tty: true
   - name: builder
     image: gcr.io/kaniko-project/executor:debug
     imagePullPolicy: Always
