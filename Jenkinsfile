@@ -12,7 +12,7 @@ spec:
   serviceAccountName: jenkins-admin
   containers:
   - name: kubectl
-    image: bitnami/kubectl:latest
+    image: bearengineer/awscli-kubectl
     command:
       - "/bin/sh"
       - "-c"
@@ -55,13 +55,7 @@ spec:
                 container('kubectl') {
                     withCredentials([file(credentialsId: 'kube-config', variable: 'KUBECONFIG')]) {
                         script {
-                            sh '''
-                            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                            unzip awscliv2.zip
-                            ./aws/install
-
-                            kubectl apply -f k8s_app
-                            '''
+                            sh 'kubectl apply -f k8s_app'
                         }
                     }
                 }
