@@ -1,0 +1,18 @@
+- name: Deploy Jenkins in EKS
+  hosts: localhost
+  tasks:
+    - name: Create a namespace for Jenkins
+      command: kubectl create namespace jenkins
+      ignore_errors: yes
+
+    - name: Create Jenkins Deployment
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', '../k8s_jenkins/jenkins.yaml') }}"
+
+    - name: Create Jenkins Service
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', '../k8s_jenkins/jenkins-service.yaml') }}"
+
+
