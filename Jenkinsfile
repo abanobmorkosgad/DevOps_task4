@@ -38,12 +38,24 @@ spec:
         sh "/kaniko/executor --dockerfile app/Dockerfile --context app --destination abanobmorkos10/pwc_app:latest"
       }
     }
-    stage('Deploying App to Kubernetes') {
-      steps {
-        script {
-          kubernetesDeploy(configs: "k8s_app/app.yaml", kubeconfigId: "kubernetes")
+    stage('Deploy to minikube') {
+        steps {
+            echo 'Deploying to eks cluster ... '
+            withCredentials([file(credentialsId:'kube-config', variable:'KUBECONFIG')]){
+                script{
+                    sh """
+                        # Install kubectl
+                        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                        chmod +x kubectl
+                        mv kubectl /usr/local/bin/
+                        
+                        # Apply Kubernetes manifests
+                        kubectl apply -f k8s_app/spp.yaml
+                        kubectl apply -f k8s_app/service.yaml
+                    """
+                }
+            }
         }
-      }
     }
   }
 }
