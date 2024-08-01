@@ -5,6 +5,11 @@
       command: kubectl create namespace jenkins
       ignore_errors: yes
 
+    - name: Create Jenkins ServiceAccount
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', '../k8s_jenkins/serviceaccount.yaml') }}"
+
     - name: Create Jenkins Deployment
       kubernetes.core.k8s:
         state: present
@@ -15,4 +20,8 @@
         state: present
         definition: "{{ lookup('file', '../k8s_jenkins/jenkins-service.yaml') }}"
 
+    - name: Create kaniko dockerhub secret
+      kubernetes.core.k8s:
+        state: present
+        definition: "{{ lookup('file', '../k8s_jenkins/secret.yaml') }}"
 
