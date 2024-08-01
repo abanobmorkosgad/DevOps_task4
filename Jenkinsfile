@@ -18,8 +18,6 @@ spec:
       - "-c"
       - "sleep 99d"
     tty: true
-    securityContext:
-      runAsUser: 0
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
     command:
