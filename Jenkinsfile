@@ -1,8 +1,8 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkinsagent'
-            defaultContainer 'kaniko'
+            label 'jenkinsrun'
+            defaultContainer 'builder'
             yaml """
 kind: Pod
 metadata:
