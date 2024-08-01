@@ -1,12 +1,12 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkinsrun'
-            defaultContainer 'builder'
+            label 'jenkinsagent'
+            defaultContainer 'kaniko'
             yaml """
 kind: Pod
 metadata:
-  name: kaniko
+  name: kaniko-kubectl
   namespace: jenkins
 spec:
   serviceAccountName: jenkins-admin
@@ -22,7 +22,6 @@ spec:
       runAsUser: 0
   - name: kaniko
     image: gcr.io/kaniko-project/executor:debug
-    imagePullPolicy: Always
     command:
     - cat
     tty: true
