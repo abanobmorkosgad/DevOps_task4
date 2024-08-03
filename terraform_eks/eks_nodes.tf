@@ -56,15 +56,11 @@ resource "aws_eks_addon" "aws-ebs-csi-driver" {
   cluster_name                = aws_eks_cluster.mycluster.name
   addon_name                  = "aws-ebs-csi-driver"
   service_account_role_arn    = aws_iam_role.ebs_csi_driver_role.arn
-
-  tags = {
-    "Name" = "aws-ebs-csi-driver"
-  }
 }
 
 resource "aws_eks_node_group" "nodes" {
   cluster_name    = aws_eks_cluster.mycluster.name
-  node_group_name = "node-group-1"
+  node_group_name = var.node_group_name
   node_role_arn   = aws_iam_role.nodes.arn
   subnet_ids      = [
     aws_subnet.public_subnet[0].id,
@@ -72,16 +68,12 @@ resource "aws_eks_node_group" "nodes" {
   ]
 
   capacity_type  = "ON_DEMAND"
-  instance_types = ["t2.medium"]
+  instance_types = [var.node_group_type]
 
   scaling_config {
-    desired_size = 2
-    max_size     = 2
-    min_size     = 2
-  }
-
-  update_config {
-    max_unavailable = 1
+    desired_size = var.node_group_num
+    max_size     = var.node_group_num
+    min_size     = var.node_group_num
   }
 
   depends_on = [

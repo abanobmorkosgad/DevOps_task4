@@ -1,6 +1,5 @@
 resource "aws_vpc" "vpc" {
   cidr_block       = var.vpc_cidr
-  instance_tenancy = "default"
 
   tags = {
     Name = var.vpc_name
@@ -25,7 +24,7 @@ resource "aws_subnet" "public_subnet" {
   tags = {
     "Name" = var.public_subnet_name[count.index]
     "kubernetes.io/role/elb" = "1"
-    "kubernetes.io/cluster/task4-cluster" = "owned"
+    "kubernetes.io/cluster/task5-cluster" = "owned"
   }
 }
 
@@ -35,10 +34,6 @@ resource "aws_route_table" "public" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.gw.id
-  }
-
-  tags = {
-    Name = "public_route_table"
   }
 }
 

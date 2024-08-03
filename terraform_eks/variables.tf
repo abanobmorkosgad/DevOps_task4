@@ -5,3 +5,6 @@ variable "avail_zones" {}
 variable "public_subnets" {}
 variable "public_subnet_name" {}
 variable "cluster_name" {}
+variable "node_group_name" {}
+variable "node_group_type" {}
+variable "node_group_num" {}
